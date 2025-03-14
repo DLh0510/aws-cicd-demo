@@ -1,0 +1,145 @@
+
+```markdown:README.md
+# 简单计算器网站 V2.0
+
+这是一个基于Flask的简单网页计算器应用，支持基础的四则运算功能。
+
+## 功能特点
+
+- 支持两个数字间的加减乘除运算
+- 简洁直观的用户界面
+- 实时计算结果显示
+- 错误处理和用户提示
+
+## 技术栈
+
+- 后端：Python Flask
+- 前端：HTML, CSS, JavaScript
+- API：RESTful API
+
+## 安装说明
+
+1. 确保已安装Python 3.x
+2. 安装所需依赖：
+```bash
+pip install flask
+```
+
+## 运行方法
+
+1. 克隆项目到本地
+2. 进入项目目录
+3. 运行应用：
+```bash
+python app.py
+```
+4. 在浏览器中访问 `http://localhost:5000`
+
+## API说明
+
+### 计算接口
+
+- 端点：`/calculate`
+- 方法：POST
+- 请求体格式：
+```json
+{
+    "num1": "数字1",
+    "num2": "数字2",
+    "operation": "操作类型"
+}
+```
+- 操作类型支持：
+  - add（加法）
+  - subtract（减法）
+  - multiply（乘法）
+  - divide（除法）
+
+## 项目结构
+
+```
+.
+├── README.md
+├── app.py              # Flask应用主文件
+└── templates
+    └── index.html      # 前端页面模板
+```
+
+## 注意事项
+
+- 除法运算时除数不能为0
+- 输入必须为有效数字
+- 建议在现代浏览器中运行以获得最佳体验
+
+## 开发者
+
+[您的名字]
+
+## 许可证
+
+MIT License
+```
+
+这个README文件包含了项目的主要信息，包括功能介绍、安装说明、使用方法、API文档等重要内容。你可以根据实际需求对内容进行调整和补充。
+
+在编写时我参考了以下代码部分：
+- app.py 的路由和功能实现：
+
+```5:34:app.py
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/calculate', methods=['POST'])
+def calculate():
+    try:
+        data = request.get_json()
+        num1 = float(data['num1'])
+        num2 = float(data['num2'])
+        operation = data['operation']
+        
+        if operation == 'add':
+            result = num1 + num2
+            symbol = '+'
+        elif operation == 'subtract':
+            result = num1 - num2
+            symbol = '-'
+        elif operation == 'multiply':
+            result = num1 * num2
+            symbol = '×'
+        elif operation == 'divide':
+            if num2 == 0:
+                return jsonify({'result': '错误：除数不能为0！'})
+            result = num1 / num2
+            symbol = '÷'
+            
+        return jsonify({'result': f'计算结果：{num1} {symbol} {num2} = {result}'})
+    except:
+        return jsonify({'result': '请输入有效的数字！'})
+```
+
+- index.html 的界面实现：
+
+```51:70:templates/index.html
+<body>
+    <h1>简单计算器网站（V2.0）</h1>
+    
+    <div class="introduction">
+        <h2>网站介绍</h2>
+        <p>这是一个简单的计算器网站，可以进行两个数字的加法运算。请在下面的输入框中输入两个数字，然后点击"计算"按钮查看结果。</p>
+    </div>
+
+    <div class="calculator">
+        <h2>功能区</h2>
+        <input type="number" id="number1" placeholder="请输入第一个数字">
+        <input type="number" id="number2" placeholder="请输入第二个数字">
+        <div class="buttons">
+            <button onclick="calculate('add')">加法</button>
+            <button onclick="calculate('subtract')">减法</button>
+            <button onclick="calculate('multiply')">乘法</button>
+            <button onclick="calculate('divide')">除法</button>
+        </div>
+        <div id="result"></div>
+    </div>
+```
+
