@@ -36,10 +36,20 @@
             margin-top: 20px;
             font-size: 18px;
         }
+        .buttons {
+            margin: 10px 0;
+        }
+        .buttons button {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .buttons button:last-child {
+            margin-right: 0;
+        }
     </style>
 </head>
 <body>
-    <h1>简单计算器网站（V1.0）</h1>
+    <h1>简单计算器网站（V2.0）</h1>
     
     <div class="introduction">
         <h2>网站介绍</h2>
@@ -50,12 +60,17 @@
         <h2>功能区</h2>
         <input type="number" id="number1" placeholder="请输入第一个数字">
         <input type="number" id="number2" placeholder="请输入第二个数字">
-        <button onclick="calculate()">计算</button>
+        <div class="buttons">
+            <button onclick="calculate('add')">加法</button>
+            <button onclick="calculate('subtract')">减法</button>
+            <button onclick="calculate('multiply')">乘法</button>
+            <button onclick="calculate('divide')">除法</button>
+        </div>
         <div id="result"></div>
     </div>
 
     <script>
-        function calculate() {
+        function calculate(operation) {
             const num1 = document.getElementById('number1').value;
             const num2 = document.getElementById('number2').value;
             
@@ -66,7 +81,8 @@
                 },
                 body: JSON.stringify({
                     num1: num1,
-                    num2: num2
+                    num2: num2,
+                    operation: operation
                 })
             })
             .then(response => response.json())
