@@ -1,145 +1,92 @@
+# Calculator Web Application
 
-```markdown:README.md
-# 简单计算器网站 V2.0
+This is a simple web-based calculator application that allows users to perform basic arithmetic operations such as addition, subtraction, multiplication, and division. The application is built using Flask and is designed to be deployed on an Amazon Linux server.
 
-这是一个基于Flask的简单网页计算器应用，支持基础的四则运算功能。
+## Features
 
-## 功能特点
+- Perform basic arithmetic operations: addition, subtraction, multiplication, and division.
+- User-friendly web interface.
+- Error handling for invalid inputs and division by zero.
+- Automatic deployment and management using Supervisor.
 
-- 支持两个数字间的加减乘除运算
-- 简洁直观的用户界面
-- 实时计算结果显示
-- 错误处理和用户提示
+## Prerequisites
 
-## 技术栈
+- Python 3
+- pip (Python package manager)
+- Amazon Linux environment
 
-- 后端：Python Flask
-- 前端：HTML, CSS, JavaScript
-- API：RESTful API
+## Installation
 
-## 安装说明
+1. **Clone the repository:**
 
-1. 确保已安装Python 3.x
-2. 安装所需依赖：
-```bash
-pip install flask
-```
+   ```bash
+   git clone <repository-url>
+   cd calculator-app
+   ```
 
-## 运行方法
+2. **Install dependencies:**
 
-1. 克隆项目到本地
-2. 进入项目目录
-3. 运行应用：
-```bash
-python app.py
-```
-4. 在浏览器中访问 `http://localhost:5000`
+   ```bash
+   pip3 install -r requirements.txt
+   ```
 
-## API说明
+3. **Set up Supervisor:**
 
-### 计算接口
+   Supervisor is used to manage the application process. The configuration files are set up in the `scripts/before_install.sh` script.
 
-- 端点：`/calculate`
-- 方法：POST
-- 请求体格式：
-```json
-{
-    "num1": "数字1",
-    "num2": "数字2",
-    "operation": "操作类型"
-}
-```
-- 操作类型支持：
-  - add（加法）
-  - subtract（减法）
-  - multiply（乘法）
-  - divide（除法）
+   ```shell:scripts/before_install.sh
+   startLine: 1
+   endLine: 50
+   ```
 
-## 项目结构
+## Deployment
 
-```
-.
-├── README.md
-├── app.py              # Flask应用主文件
-└── templates
-    └── index.html      # 前端页面模板
-```
+The application is designed to be deployed using AWS CodeDeploy. The deployment process is defined in the `appspec.yml` file.
+yaml:appspec.yml
+startLine: 1
+endLine: 18
 
-## 注意事项
+### Deployment Steps
 
-- 除法运算时除数不能为0
-- 输入必须为有效数字
-- 建议在现代浏览器中运行以获得最佳体验
+1. **Before Install:**
 
-## 开发者
+   The `scripts/before_install.sh` script installs necessary packages and sets up the Supervisor configuration.
 
-[您的名字]
+2. **Application Start:**
 
-## 许可证
+   The `scripts/start_application.sh` script installs application dependencies and starts the Supervisor service.
 
-MIT License
-```
+   ```shell:scripts/start_application.sh
+   startLine: 1
+   endLine: 16
+   ```
 
-这个README文件包含了项目的主要信息，包括功能介绍、安装说明、使用方法、API文档等重要内容。你可以根据实际需求对内容进行调整和补充。
+3. **Application Stop:**
 
-在编写时我参考了以下代码部分：
-- app.py 的路由和功能实现：
+   The `scripts/stop_application.sh` script stops the application and Supervisor service.
 
-```5:34:app.py
-@app.route('/')
-def home():
-    return render_template('index.html')
+   ```shell:scripts/stop_application.sh
+   startLine: 1
+   endLine: 12
+   ```
 
-@app.route('/calculate', methods=['POST'])
-def calculate():
-    try:
-        data = request.get_json()
-        num1 = float(data['num1'])
-        num2 = float(data['num2'])
-        operation = data['operation']
-        
-        if operation == 'add':
-            result = num1 + num2
-            symbol = '+'
-        elif operation == 'subtract':
-            result = num1 - num2
-            symbol = '-'
-        elif operation == 'multiply':
-            result = num1 * num2
-            symbol = '×'
-        elif operation == 'divide':
-            if num2 == 0:
-                return jsonify({'result': '错误：除数不能为0！'})
-            result = num1 / num2
-            symbol = '÷'
-            
-        return jsonify({'result': f'计算结果：{num1} {symbol} {num2} = {result}'})
-    except:
-        return jsonify({'result': '请输入有效的数字！'})
-```
+## Usage
 
-- index.html 的界面实现：
+- Access the application via a web browser at `http://<server-ip>:5000`.
+- Enter two numbers and select an operation to perform the calculation.
 
-```51:70:templates/index.html
-<body>
-    <h1>简单计算器网站（V2.0）</h1>
-    
-    <div class="introduction">
-        <h2>网站介绍</h2>
-        <p>这是一个简单的计算器网站，可以进行两个数字的加法运算。请在下面的输入框中输入两个数字，然后点击"计算"按钮查看结果。</p>
-    </div>
+## Docker
 
-    <div class="calculator">
-        <h2>功能区</h2>
-        <input type="number" id="number1" placeholder="请输入第一个数字">
-        <input type="number" id="number2" placeholder="请输入第二个数字">
-        <div class="buttons">
-            <button onclick="calculate('add')">加法</button>
-            <button onclick="calculate('subtract')">减法</button>
-            <button onclick="calculate('multiply')">乘法</button>
-            <button onclick="calculate('divide')">除法</button>
-        </div>
-        <div id="result"></div>
-    </div>
-```
+A Dockerfile is provided for containerized deployment.
+Dockerfile
+startLine: 1
+endLine: 10
 
+## License
+
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- Built with Flask and Supervisor.
+- Deployed on Amazon Linux.
